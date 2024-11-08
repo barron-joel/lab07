@@ -122,44 +122,52 @@ This linear model is appropriate as the residual plot is randomly distributed ab
 0. Look at the variable rank, and determine the frequency of each category level.
 
 ```{r}
-# ... 
+evals %>%
+  group_by(rank) %>%
+  count()
 ```
 
 1. Fit a new linear model called `score_rank_fit` to predict average professor evaluation `score` based on `rank` of the professor.
 
 ```{r fit-score_rank_fit}
-# fit model
+score_rank_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ rank, data = evals)
 
-# tidy model output
+tidy(score_rank_fit)
 ```
 
-*Add your narrative here.*
+score-hat = 4.28 - 0.130 x rank_tenure_track - 0.145 x rank_tenured
+
+The intercept is the predicted score if your rank is teaching. The slopes show that this decreases by 0.130 if you are rank tenrue track, and decreases by 0.145 if your rank is tenured.
 
 2. Fit a new linear model called `score_gender_fit` to predict average professor evaluation `score` based on `gender` of the professor. 
 
 ```{r fit-score_gender_fit}
-# fit model
+score_gender_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ gender, data = evals)
 
-# tidy model output
+tidy(score_gender_fit)
 ```
 
-```{r score_gender_intercept, eval=FALSE}
-# remove eval = FALSE from the code chunk options
+```{r score_gender_intercept, echo=FALSE}
 score_gender_intercept <- tidy(score_gender_fit) %>% 
   filter(term == "(Intercept)") %>%
   select(estimate) %>%
   pull()
 ```
 
-```{r score_gender_slope, eval=FALSE}
-# remove eval = FALSE from the code chunk options
+```{r score_gender_slope, echo=FALSE}
 score_gender_slope <- tidy(score_gender_fit) %>% 
   filter(term == "gendermale") %>%
   select(estimate) %>%
   pull()
 ```
 
-*Add your narrative here. Use in-line code!*
+The intercept of the model is `r round(score_gender_intercept, 3)`
+The slope of this model is `r round(score_gender_slope, 3)`
+
 
 # Exercise 4: Multiple linear regression
 
