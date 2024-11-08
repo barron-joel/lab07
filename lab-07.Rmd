@@ -174,15 +174,22 @@ The slope of this model is `r round(score_gender_slope, 3)`
 1. Fit a multiple linear regression model, predicting average professor evaluation `score` based on average beauty rating (`bty_avg`) and `gender.`
 
 ```{r fit-score_bty_gender_fit}
-# fit model
+score_bty_gender_fit <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(score ~ bty_avg + gender, data = evals)
 
-# tidy model output
+tidy(score_bty_gender_fit)
 ```
 
-*Add your narrative here.*
+The intercept is the score given to a female when her beauty score is zero. The slope for bty_avg is the increase in score for a increase of 1 in beauty rating. The slope for gender male is the increase in score if the professor is male.
 
 ```{r eval = FALSE}
-ggplot(___) + ...
+ggplot(evals, mapping = aes(
+  y = score,
+  x = bty_avg,
+  colour = gender
+)) + 
+  geom_jitter()
 ```
 
 2. What percent of the variability in `score` is explained by the model `score_bty_gender_fit`. 
@@ -194,11 +201,11 @@ ggplot(___) + ...
 
 3. What is the equation of the line corresponding to just male professors?
 
-*Add your equation here.*
+score-hat = 3.92 + 0.074 x bty_avg
 
 4. For two professors who received the same beauty rating, which gender tends to have the higher course evaluation score?
 
-*Add your narrative here.*
+Male
 
 5. How does the relationship between beauty and evaluation score vary between male and female professors?
 
